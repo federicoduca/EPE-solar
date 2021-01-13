@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
                 # filtramos registros que cumpla con alguno de los criterios participante/region
                 df_log = df_log[registro_p_p | registro_p_r | registro_r_p]
-                print(f' > Registros válidos por participante / región: {df_log.shape[0]}')
+                print(f' > Registros válidos por participante / region: {df_log.shape[0]}')
 
                 ## si quedo algo 
                 if not df_log.empty:
