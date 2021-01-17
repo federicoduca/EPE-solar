@@ -1,5 +1,5 @@
 files:
-  path_participantes: 'wspr_participantes.csv'
+  path_participantes: 'participantes.csv'
   path_logs: 'wsprspots-2020-12.csv'
   path_resultados: 'wspr_resultados.xlsx'
   path_registros: 'wspr_registros_validos.csv'

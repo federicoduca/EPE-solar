@@ -27,7 +27,7 @@ class Concurso():
 
         self.timestamp_inicio = datetime.timestamp(self.fecha_inicio)
         self.timestamp_fin = datetime.timestamp(self.fecha_fin)
-
+        
         ##### listado de participantes
         self.participantes = p
 
@@ -55,6 +55,12 @@ class Concurso():
         ##### listado de bandas
         self.bandas = list(b.keys())
         self.puntaje_bandas = b
+
+    def duracion_concurso(self):
+        '''
+        devuelve la duracion del evento en segundos
+        '''
+        return self.timestamp_fin - self.timestamp_inicio
 
     def chequeo_fecha(self, timestamp):
         '''

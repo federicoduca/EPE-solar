@@ -14,7 +14,7 @@ from concurso import Concurso
 if __name__ == '__main__':
     
     print()
-    print('### Iniciando evaluador de competencia WSPR ####')
+    print('### EVALUADOR COMPETENCIA WSPR ####')
 
     print()
     print('Cargando configuracion del torneo:')
@@ -157,8 +157,12 @@ if __name__ == '__main__':
     df_r = pd.concat([df_tx,df_rx],join='outer',axis=1).fillna(0)
     df_r.reset_index(inplace=True)
 
+    ## corregimos el valor de H
+    df_r['H_tx'] = df_r['H_tx'] * 100 * (2*60) / (concurso.duracion_concurso()) 
+    df_r['H_rx'] = df_r['H_rx'] * 100 * (2*60) / (concurso.duracion_concurso()) 
+
     ## filtramos finalmente a los que fueron concursantes
-    df_r[df_r['sd'].isin(concurso.obtener_participantes())]
+    df_r = df_r[df_r['sd'].isin(concurso.obtener_participantes())]
     
     ## guardamos resultados sin procesar con puntaje 
     df_r.to_excel(PATH_RESULTADOS,index=None)
