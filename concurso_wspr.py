@@ -14,10 +14,10 @@ from concurso import Concurso
 if __name__ == '__main__':
     
     print()
-    print('### EVALUADOR COMPETENCIA WSPR ####')
+    print('#### EVALUADOR COMPETENCIA WSPR ####')
 
     print()
-    print('Cargando configuracion del torneo:')
+    print('Cargando configuracion del torneo')
 
     # Nos aseguramos de estar en el directorio del script
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -39,9 +39,9 @@ if __name__ == '__main__':
     ENTIDADES = config['concurso']['entidades']
     BANDAS = config['concurso']['bandas']
 
-    print()
-    print(f'Concurso:')
-    print(f' > Abierto desde {FI} hasta {FF}')
+    print(f' > Duracion:')
+    print(f'   - Desde {FI}')
+    print(f'   - Hasta {FF}')
     print(f' > Entidades: ')
     for entidad in ENTIDADES:
         print(f'   - {entidad}')
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         print(f'   - {b}: {p}')
     
     # obtenemos el listado de participantes de WSPR
-    df_ham = pd.read_csv(PATH_PARTICIPANTES)
+    df_ham = pd.read_csv(PATH_PARTICIPANTES,delimiter=';')
     participantes = df_ham[df_ham['modo']=='WSPR']['call_sign'].tolist()
     del df_ham
 
@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
                 # filtramos registros que cumpla con alguno de los criterios participante/region
                 df_log = df_log[registro_p_p | registro_p_r | registro_r_p]
-                print(f' > Registros válidos por participante / region: {df_log.shape[0]}')
+                print(f' > Registros validos por participante / region: {df_log.shape[0]}')
 
                 ## si quedo algo 
                 if not df_log.empty:
@@ -124,13 +124,14 @@ if __name__ == '__main__':
                     ## si quedo algo lo guardamos
                     if not df_log.empty:
                         df_log_conquest = df_log_conquest.append(df_log, ignore_index=True)
-           
+        
         ## cambiamos el formato de la fecha a uno legible por humanos
         df_log_conquest['time'] = pd.to_datetime(df_log_conquest['time'], unit='s') 
 
         ## guardamos los contactos validos
         df_log_conquest.to_csv(PATH_REGISTROS,index=None)
-
+        print()
+    
     else: 
         print('encontrados!')
         df_log_conquest = pd.read_csv(PATH_REGISTROS)
@@ -156,16 +157,46 @@ if __name__ == '__main__':
     ## unimos resultados
     df_r = pd.concat([df_tx,df_rx],join='outer',axis=1).fillna(0)
     df_r.reset_index(inplace=True)
+    del df_tx
+    del df_rx
 
     ## corregimos el valor de H
     df_r['H_tx'] = df_r['H_tx'] * 100 * (2*60) / (concurso.duracion_concurso()) 
     df_r['H_rx'] = df_r['H_rx'] * 100 * (2*60) / (concurso.duracion_concurso()) 
 
-    ## filtramos finalmente a los que fueron concursantes
+    ## filtramos finalmente a los que figuran en la lista de participantes
     df_r = df_r[df_r['sd'].isin(concurso.obtener_participantes())]
     
-    ## guardamos resultados sin procesar con puntaje 
-    df_r.to_excel(PATH_RESULTADOS,index=None)
+    ## creamos el campo de banda
+    df_r['B'] = df_r['band'].apply(concurso.calcular_puntaje_bandas)
 
-    print('Gracias vuelva prontos')
+    ## calculamos el puntaje final
+    df_r['puntaje'] = (df_r['H_tx'] * df_r['N_tx'] + df_r['H_rx'] * df_r['N_rx']) * df_r['B']
+
+    ## y creamos el ranking por banda:
+    df_r['ranking'] = df_r.groupby('band')['puntaje'].rank('dense',ascending=False)
+
+    ## obtenemos los inscriptos que no participaron
+    no_participantes = [p for p in concurso.obtener_participantes() if p not in df_r['sd'].unique()]
+
+    print(f'Inscriptos que no participaron: {len(no_participantes)}')
+
+    ## creamos un diccionario con las columnas y los campos en 0
+    dict_no_p = dict.fromkeys(df_r.columns.tolist(), 0)
+    dict_no_p['band'] = "0m"
+    
+    ## los agregamos al listado con puntaje 0 en todo
+    for no_p in no_participantes:
+        dict_no_p['sd'] = no_p
+        df_r = df_r.append(dict_no_p, ignore_index=True)
+
+    ## ordenamos los resultados por puntaje
+    df_r.sort_values(by=['band','puntaje'],inplace=True, ascending=False)
+
+    ## guardamos resultados sin procesar con puntaje 
+    with pd.ExcelWriter(PATH_RESULTADOS) as writer:  # pylint: disable=abstract-class-instantiated 
+        for band in df_r.band.unique():
+            df_r[df_r['band']==band].to_excel(writer,band,index=None)
+
+    print('Gracias vuelva prontos :)')
     print()
