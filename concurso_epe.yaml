@@ -1,0 +1,9 @@
+files:
+  path_participantes: 'participantes.csv'
+  path_logs: 'wsprspots-2020-12.csv'
+  path_registros: 'epe_wspr_logs_previos.xlsx'
+  chunk_size: 700000
+concurso:
+  fi: '13-12-2020 00:00' # 1607871600 # 1607871600.0
+  ff: '13-12-2020 15:00' # 1608044400 # 1608055200.0
+  entidades: ['Argentina','Brasil','Uruguay','Chile','Bolivia','Paraguay','Peru','Antartida']
