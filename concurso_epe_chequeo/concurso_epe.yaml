@@ -1,5 +1,5 @@
 files:
-  path_participantes: 'participantes.csv'
+  path_participantes: 'datos/participantes.csv'
   path_logs: 'wsprspots-2020-12.csv'
   path_registros: 'epe_wspr_logs_previos.xlsx'
   chunk_size: 700000

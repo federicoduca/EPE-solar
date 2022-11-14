@@ -1,8 +1,9 @@
 files:
-  path_participantes: 'participantes.csv'
-  path_log: 'log total.xlsx'
-  path_resultados: 'ft8_resultados.xlsx'
-  path_registros: 'ft8_registros_validos.xlsx'
+  path_participantes: 'datos/participantes.csv'
+  path_logs: 'datos/wsprspots-2020-12.csv'
+  path_resultados: 'wspr_resultados.xlsx'
+  path_registros: 'wspr_registros_validos.csv'
+  chunk_size: 500000
 concurso:
   fi: '13-12-2020 15:00' # 1607871600 # 1607871600.0
   ff: '15-12-2020 15:00' # 1608044400 # 1608055200.0

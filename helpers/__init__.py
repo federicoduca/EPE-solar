@@ -1,0 +1,1 @@
+from .concurso import Concurso

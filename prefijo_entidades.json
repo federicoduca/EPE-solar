@@ -1,0 +1,67 @@
+{
+    "Argentina": [
+        "LP",
+        "LQ",
+        "LR",
+        "LS",
+        "LT",
+        "LU",
+        "LV",
+        "LW",
+        "AY",
+        "AZ",
+        "L"
+    ],
+    "Brasil": [
+        "PP",
+        "PQ",
+        "PR",
+        "PS",
+        "PT",
+        "PU",
+        "PV",
+        "PW",
+        "PX",
+        "PY"
+    ],
+    "Uruguay": [
+        "CV",
+        "CW",
+        "CX"
+    ],
+    "Chile": [
+        "XQ",
+        "XR",
+        "CA",
+        "CB",
+        "CC",
+        "CD",
+        "CE"
+    ],
+    "Bolivia": [
+        "CP"
+    ],
+    "Paraguay": [
+        "ZP"
+    ],
+    "Peru": [
+        "OA",
+        "OB",
+        "OC"
+    ],
+    "Antartida": [
+        "DP",
+        "RI",
+        "LP",
+        "LQ",
+        "LR",
+        "LS",
+        "LT",
+        "LU",
+        "LV",
+        "LW",
+        "AY",
+        "AZ",
+        "L"
+    ]
+}
